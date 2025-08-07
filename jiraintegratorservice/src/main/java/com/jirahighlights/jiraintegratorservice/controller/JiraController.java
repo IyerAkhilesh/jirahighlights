@@ -7,6 +7,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.beans.factory.annotation.Autowired;
+import com.jirahighlights.jiraintegratorservice.JiraApiProperties;
+
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Base64;
@@ -17,24 +20,17 @@ import reactor.core.publisher.Mono;
 @Slf4j
 public class JiraController {
 
-    @Value("${jira.api.url}")
-    private String jiraApiUrl;
-
-    @Value("${jira.api.username}")
-    private String username;
-  
-    @Value("${jira.api.token}")
-    private String token;
+    @Autowired
+    private JiraApiProperties jiraApiProperties;
 
     @GetMapping("/ticket/{ticketId}")
     public Mono<JiraTicket> getTicket(@PathVariable String ticketId) {
-        String encodedAuth = Base64.getEncoder().encodeToString((username + ":" + token).getBytes());
+        String encodedAuth = Base64.getEncoder().encodeToString((jiraApiProperties.getUsername() + ":" + jiraApiProperties.getToken()).getBytes());
         WebClient webClient = WebClient.builder()
-            .baseUrl(jiraApiUrl)
+            .baseUrl(jiraApiProperties.getUrl())
             .defaultHeader("Authorization", "Basic " + encodedAuth)
             .build();
 
-        log.debug("FETCHING Jira ticket with ID: {}", jiraApiUrl + "/" +ticketId);
         return webClient.get()
             .uri("/rest/api/2/issue/{id}", ticketId)
             .retrieve()
