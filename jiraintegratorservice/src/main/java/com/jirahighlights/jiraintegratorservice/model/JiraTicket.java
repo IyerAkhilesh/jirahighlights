@@ -1,8 +1,10 @@
 package com.jirahighlights.jiraintegratorservice.model;
 
 import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class JiraTicket {
     private String id;
     private String key;

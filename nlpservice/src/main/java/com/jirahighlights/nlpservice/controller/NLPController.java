@@ -15,14 +15,14 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/nlp")
-public class NlpController {
+public class NLPController {
 
     private SentenceDetectorME sentenceDetector;
 
-    public NlpController() throws IOException {
-        InputStream modelIn = new ClassPathResource("models/en-sent.bin").getInputStream();
-        SentenceModel model = new SentenceModel(modelIn);
-        sentenceDetector = new SentenceDetectorME(model);
+    public NLPController() throws IOException {
+        // InputStream modelIn = new ClassPathResource("models/en-sent.bin").getInputStream();
+        // SentenceModel model = new SentenceModel(modelIn);
+        // sentenceDetector = new SentenceDetectorME(model);
     }
 
     @PostMapping("/sentences")

@@ -21,6 +21,10 @@ public class ChatbotService {
         this.nlpWebClient = WebClient.builder().baseUrl("http://nlpservice").build();
     }
 
+    public String getMessage(String responseMessage) {
+        return "The answer to your question is as follows - \n" + responseMessage;
+    }
+
     public Mono<String> processQuery(String userQuery) {
         // Simple logic to extract ticket ID from a user query (e.g., "summarize PROJ-123")
         String ticketId = userQuery.split(" ")[1];

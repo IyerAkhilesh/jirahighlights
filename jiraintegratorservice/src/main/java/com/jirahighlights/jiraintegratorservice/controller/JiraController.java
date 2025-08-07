@@ -7,11 +7,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Base64;
+import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping("/api/jira")
+@Slf4j
 public class JiraController {
 
     @Value("${jira.api.url}")
@@ -31,8 +34,9 @@ public class JiraController {
             .defaultHeader("Authorization", "Basic " + encodedAuth)
             .build();
 
+        log.debug("FETCHING Jira ticket with ID: {}", jiraApiUrl + "/" +ticketId);
         return webClient.get()
-            .uri("/issue/{id}", ticketId)
+            .uri("/rest/api/2/browse/{id}", ticketId)
             .retrieve()
             .bodyToMono(JiraTicket.class);
     }
