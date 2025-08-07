@@ -36,7 +36,7 @@ public class JiraController {
 
         log.debug("FETCHING Jira ticket with ID: {}", jiraApiUrl + "/" +ticketId);
         return webClient.get()
-            .uri("/rest/api/2/browse/{id}", ticketId)
+            .uri("/rest/api/2/issue/{id}", ticketId)
             .retrieve()
             .bodyToMono(JiraTicket.class);
     }
