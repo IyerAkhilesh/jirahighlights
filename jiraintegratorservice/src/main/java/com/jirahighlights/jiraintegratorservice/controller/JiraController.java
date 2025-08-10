@@ -1,17 +1,25 @@
 package com.jirahighlights.jiraintegratorservice.controller;
 
 import com.jirahighlights.jiraintegratorservice.model.JiraTicket;
+import com.jirahighlights.jiraintegratorservice.model.TicketRequest;
+import com.jirahighlights.jiraintegratorservice.JiraApiProperties;
+import com.jirahighlights.jiraintegratorservice.service.JiraService;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.beans.factory.annotation.Autowired;
-import com.jirahighlights.jiraintegratorservice.JiraApiProperties;
 
 import lombok.extern.slf4j.Slf4j;
+import jakarta.validation.Valid;
 
 import java.util.Base64;
+import java.util.Map;
+
 import reactor.core.publisher.Mono;
 
 @RestController
@@ -19,8 +27,14 @@ import reactor.core.publisher.Mono;
 @Slf4j
 public class JiraController {
 
+    private final JiraService jiraService;
+
     @Autowired
     private JiraApiProperties jiraApiProperties;
+
+    public JiraController(JiraService jiraService) {
+        this.jiraService = jiraService;
+    }
 
     @GetMapping("/ticket/{ticketId}")
     public Mono<JiraTicket> getTicket(@PathVariable String ticketId) {
@@ -35,4 +49,22 @@ public class JiraController {
             .retrieve()
             .bodyToMono(JiraTicket.class);
     }
+
+    /*
+     * Endpoint to generate random Jira tickets.
+     */
+
+    // @PostMapping("/generate-tickets")
+    // public Mono<Map<String,String>> generateTickets(@Valid @RequestBody TicketRequest request) {
+    //     // Logic to generate tickets
+    //     if (request.getCount() <= 0 || request.getCount() > 1000) {
+    //         return Mono.just(Map.of("error", "Count must be between 1 and 1000"));
+    //     }
+        
+    //     return jiraService.createRandomTickets(request.getCount(), request.getProjectKey(), request.getIssueType(), request.getComment())
+    //             .thenReturn(Map.of(
+    //                     "message", "Successfully started creating " + request.getCount() + " random Jira tickets.",
+    //                     "jira_project_key", request.getProjectKey()
+    //             ));
+    // }
 }

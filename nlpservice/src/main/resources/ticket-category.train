@@ -1,0 +1,17 @@
+# Sample OpenNLP training data for Jira ticket classification
+# Format: <label> <text>
+highlights Ticket ABC-123: User login not working after update. User unable to access dashboard. Multiple users affected.
+vulnerability CVE-2024-12345 Ticket DEF-456: Password is visible in logs after failed login attempt.
+policy_violation Ticket GHI-789: Ticket closed without review by QA team.
+ticket:number TICKET-001
+ticket:title Unable to connect to database
+ticket:description Database connection fails intermittently after deployment.
+ticket:status Open
+ticket:project JIRA-HIGHLIGHTS
+ticket:assignee John Doe
+ticket:creator Jane Smith
+ticket:creation_time 2025-08-01T10:15:00Z
+ticket:last_update_time 2025-08-09T09:00:00Z
+ticket:last_comment Investigating the root cause. Will update soon.
+ticket:number_of_attachments 2
+# Add more examples below for each label and ticket field as needed
