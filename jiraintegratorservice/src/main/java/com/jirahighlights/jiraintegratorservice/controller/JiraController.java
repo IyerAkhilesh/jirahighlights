@@ -1,24 +1,25 @@
 package com.jirahighlights.jiraintegratorservice.controller;
 
 import com.jirahighlights.jiraintegratorservice.model.JiraTicket;
-import com.jirahighlights.jiraintegratorservice.model.TicketRequest;
 import com.jirahighlights.jiraintegratorservice.JiraApiProperties;
-import com.jirahighlights.jiraintegratorservice.service.JiraService;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import lombok.extern.slf4j.Slf4j;
-import jakarta.validation.Valid;
 
 import java.util.Base64;
-import java.util.Map;
+
+// import com.jirahighlights.jiraintegratorservice.service.JiraService;
+// import com.jirahighlights.jiraintegratorservice.model.TicketRequest;
+// import org.springframework.web.bind.annotation.PostMapping;
+// import org.springframework.web.bind.annotation.RequestBody;
+// import jakarta.validation.Valid;
+// import java.util.Map;
 
 import reactor.core.publisher.Mono;
 
@@ -27,14 +28,15 @@ import reactor.core.publisher.Mono;
 @Slf4j
 public class JiraController {
 
-    private final JiraService jiraService;
+   
 
     @Autowired
     private JiraApiProperties jiraApiProperties;
 
-    public JiraController(JiraService jiraService) {
-        this.jiraService = jiraService;
-    }
+    // private final JiraService jiraService;
+    // public JiraController(JiraService jiraService) {
+    //     this.jiraService = jiraService;
+    // }
 
     @GetMapping("/ticket/{ticketId}")
     public Mono<JiraTicket> getTicket(@PathVariable String ticketId) {
