@@ -1,0 +1,14 @@
+That's a very sharp and important observation. You are absolutely correct.
+
+My apologies for the ambiguity in the previous response. The raw JIRA ticket data is fetched by the **JIRA Integration Service**, not the Chatbot Service.
+
+The correct flow of data in a well-designed microservices architecture for this application would be:
+
+1.  A user sends a request to the **Chatbot Service** (e.g., "Summarize JIRA ticket PROJ-123").
+2.  The **Chatbot Service** acts as an orchestrator. It makes an API call to the **JIRA Integration Service**, asking for the details of ticket `PROJ-123`.
+3.  The **JIRA Integration Service** authenticates with the JIRA API, fetches the raw ticket data (including description, comments, etc.), and returns it to the **Chatbot Service**.
+4.  The **Chatbot Service** then takes this raw data and makes another API call, this time to the **NLP/Highlights Service**, with the raw JIRA data as the payload.
+5.  The **NLP/Highlights Service** processes the raw data, performs the summarization or highlight extraction, and returns the processed, human-readable text to the **Chatbot Service**.
+6.  Finally, the **Chatbot Service** sends this processed text back to the user.
+
+This pattern, where the Chatbot Service coordinates the calls between the other services, is a key principle of microservices. It ensures that the JIRA Integration Service only ever deals with JIRA's API, and the NLP Service only ever deals with text processing.

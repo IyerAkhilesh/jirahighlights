@@ -29,12 +29,6 @@ public class JiraService {
     // ObjectMapper for JSON serialization/deserialization
     private final ObjectMapper objectMapper;
 
-    // A list of 8 potential assignees (using placeholders for Jira account IDs)
-    private final List<String> assignees = List.of(
-        "Akhilesh Iyer", "2name2_testuser", "name3_testuser", "4name_testuser",
-        "name5_testuser", "6nam_testuser", "name_seven_testuser", "name1_testuser"
-    );
-
     public JiraService(WebClient.Builder webClientBuilder, JiraApiProperties jiraApiProperties, ObjectMapper objectMapper) {
         this.jiraApiProperties = jiraApiProperties;
         this.objectMapper = objectMapper;
@@ -71,12 +65,8 @@ public class JiraService {
                     .flatMap(i -> {
                         // Generate random data for the ticket.
                         String randomSummary = "Auto-generated Ticket " + UUID.randomUUID();
-                        String randomDescription = "This is an automatically created ticket for testing purposes. It is ticket number " + i + ".";
                         String finalIssueType = (issueType != null && !issueType.isEmpty()) ? issueType : getRandomIssueType();
                         
-                        // Randomly select an assignee from the predefined list
-                        String randomAssignee = assignees.get(ThreadLocalRandom.current().nextInt(assignees.size()));
-
                         // Create the JSON payload for the new Jira ticket.
                         String jsonPayload = createJiraTicketJson(randomSummary, projectKey, finalIssueType);
                         System.out.println("Generated JSON Payload: " + jsonPayload);

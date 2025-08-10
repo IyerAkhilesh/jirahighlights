@@ -1,0 +1,60 @@
+JIRA Highlights Chatbot - Spring MVC - Rest API - Microservices
+
+Core services - 
+--------------------
+-> Orchestrator service - Communicates with the frontend chatbot UI that takes input from the user
+Tech - SpringBoot REST app
+Dependencies - Spring Web
+Functionality -
+1. Take input from user through UI module
+2. Parse intent from the input 
+3. Communicate with other MSs to process input and fulfill the request
+4. Construct a final response and send it back to the UI/user
+5. Storable items - API ids, Session id, Username
+
+-> JIRA integration service - Only component that interacts with the JIRA service. All JIRA comm. logic, communication, tokens and passwords are only saved on the isolated environment and database meant for this service - avoiding multiple points of failure and enforcing security up- and downstream
+Tech - SpringBoot REST app
+Dependencies - Spring Web, Dedicated JIRA client library and/or WebClient for direct HTTP calls.
+Functionality - 
+1. Take requests from Orchestrator service
+2. Handle authentication with JIRA API through OAuth2.0/JWT
+3. Call JIRA REST API endpoints to fetch 
+4. Return raw JIRA ticket data as JSON to the Orchestrator service
+5. Storable items - API ids, Session Id, JIRA id, Tokens, Request, Response
+
+-> NLP/Highlights service - Processes the response from JIRA to provide meaningful information from it
+Tech - SpringBoot REST app
+Dependencies - Spring Web, Dedicated NLP library to process input
+Functionality - 
+1. Receive raw data fom JIRA tickets from the JIRA service (GEMINI SAID CHATBOT SERVICE. ASK IF IT MEANT JIRA SERVICE)
+2. Provide highlights using techniques like keyword extraction, name entity recognition, or summarization to find the most important and interesting parts of the ticket information. Libs like Stanford Core NLP or Apache Open NLP are good choices
+3. Answer questions from user by processing them first using semantic search or specialized AI model
+4. Return human-readable summary to the Orchestrator service
+
+Support services - 
+--------------------
+-> API gateway - Entry point for all external requests which eventually provides a unified API for all services
+Tech - SpringBoot with Spring Cloud Gateway
+Functionality - 
+1. Route incoming requests from the Orchestrator service to individual microservices and back
+2. Handle authentication and authorization for external calls
+3. Performs load-balancing to distribute requests across multiple instances instead of one, to prevent a single point of failure (HA)
+
+-> Service discovery - Services will find and communicate with each other without having to hardcode IP addresses and ports
+Tech - SpringBoot with Spring Cloud Eureka or Consul (CAN ANY AWS SERVICE BE INTEGRATED OR USED HERE?)
+Functionality - 
+1. When an MS starts, it registers itself with the Eureka server
+2. When one MS needs to call another, it asks Eureka for a healthy instance of the same (HA)
+
+-> Data storage - Each service will store data in its own dedicated database
+Tech - MySQL/PostgreSQL for RDBM and NoSQL (MongoDB) for flexible and scalable data storage
+Functionality - 
+1. Orchestrator service will store conversation history per user (data compression techniques to be discussed here), user preferences, session state, etc
+2. JIRA integration service will store and cache frequently accessed JIRA data to reduce API call volume/frequency
+3. NLP service will store pre-processed models and dictionaries (Check MCP servers)
+
+-> Inter-service communication - The MSs will communicate with a mixed pattern of Synchronous and Asynchronous API calls
+Tech and functionalities - 
+1. Spring Web for RESTful APIs - Synchronous. Orchestrator service calls JIRA integration service and waits for a response
+2. Apache Kafka or RabbitMQ message brokering or queuing - Asynchronous. Long-running background tasks like triggering complex analysis of large JIRA tickets without making user wait for response
+
