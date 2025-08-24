@@ -139,10 +139,8 @@ public class JiraService {
      * Helper method to construct the JSON body for creating a Jira ticket.
      *
      * @param summary The ticket summary.
-     * @param description The ticket description.
      * @param projectKey The key of the Jira project.
      * @param issueType The type of the issue (e.g., "Task", "Bug").
-     * @param assignee The assignee for the ticket.
      * @return A JSON string for the request body.
      */
     private String createJiraTicketJson(String summary, String projectKey, String issueType) {

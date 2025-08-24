@@ -14,12 +14,12 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.Base64;
 
-// import com.jirahighlights.jiraintegratorservice.service.JiraService;
-// import com.jirahighlights.jiraintegratorservice.model.TicketRequest;
-// import org.springframework.web.bind.annotation.PostMapping;
-// import org.springframework.web.bind.annotation.RequestBody;
-// import jakarta.validation.Valid;
-// import java.util.Map;
+import com.jirahighlights.jiraintegratorservice.service.JiraService;
+import com.jirahighlights.jiraintegratorservice.model.TicketRequest;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import jakarta.validation.Valid;
+import java.util.Map;
 
 import reactor.core.publisher.Mono;
 
@@ -28,15 +28,13 @@ import reactor.core.publisher.Mono;
 @Slf4j
 public class JiraController {
 
-   
-
     @Autowired
     private JiraApiProperties jiraApiProperties;
 
-    // private final JiraService jiraService;
-    // public JiraController(JiraService jiraService) {
-    //     this.jiraService = jiraService;
-    // }
+    private final JiraService jiraService;
+    public JiraController(JiraService jiraService) {
+        this.jiraService = jiraService;
+    }
 
     @GetMapping("/ticket/{ticketId}")
     public Mono<JiraTicket> getTicket(@PathVariable String ticketId) {
@@ -56,17 +54,17 @@ public class JiraController {
      * Endpoint to generate random Jira tickets.
      */
 
-    // @PostMapping("/generate-tickets")
-    // public Mono<Map<String,String>> generateTickets(@Valid @RequestBody TicketRequest request) {
-    //     // Logic to generate tickets
-    //     if (request.getCount() <= 0 || request.getCount() > 1000) {
-    //         return Mono.just(Map.of("error", "Count must be between 1 and 1000"));
-    //     }
+    @PostMapping("/generate-tickets")
+    public Mono<Map<String,String>> generateTickets(@Valid @RequestBody TicketRequest request) {
+        // Logic to generate tickets
+        if (request.getCount() <= 0 || request.getCount() > 1000) {
+            return Mono.just(Map.of("error", "Count must be between 1 and 1000"));
+        }
         
-    //     return jiraService.createRandomTickets(request.getCount(), request.getProjectKey(), request.getIssueType(), request.getComment())
-    //             .thenReturn(Map.of(
-    //                     "message", "Successfully started creating " + request.getCount() + " random Jira tickets.",
-    //                     "jira_project_key", request.getProjectKey()
-    //             ));
-    // }
+        return jiraService.createRandomTickets(request.getCount(), request.getProjectKey(), request.getIssueType(), request.getComment())
+                .thenReturn(Map.of(
+                        "message", "Successfully started creating " + request.getCount() + " random Jira tickets.",
+                        "jira_project_key", request.getProjectKey()
+                ));
+    }
 }
